@@ -201,9 +201,9 @@ Motion on the home page comes from driving, and each behaviour has one job. They
   - On phones, and on desktop once a search has results: the tilt starts only when the road's bottom edge is above half the viewport. It never tilts while the map or results are in use.
 - **The paint machine.** When the prices arrive, a paint-white stripe with a works-yellow block sweeps Italy north to south in 1.9s (ease-in-out). It repaints each dot from the pre-price paint to its price colour, and paints the running count in yellow Road beside the block. The caption line under the map is `aria-busy` during the sweep and announces once at the end. Searches wait for the machine to finish.
 - **The flight.** A search animates the map camera over 1.1s with exponential ease-out (zoom in log space). The canvas banks up to 40deg mid-flight (`rotateX`, sine envelope) and lands flat. It aims at the part of the canvas that is on screen. On desktop the map is sticky beside the results.
-- **The parking.** In the "In auto" section the app's map screenshot starts at full stage height in the free area right of the copy. It reverses into its bay while the other four bays slide up in turn, all driven by scroll on a 240vh sticky stage. Desktop only (min-width 901px).
+- **The phone tour.** In "In auto" one iPhone (10px bezel, #0B0F12) shows the app's real screens. Five steps sit beside it. On desktop the phone is sticky, and the step crossing the middle of the viewport becomes current: its title and arrow turn works-yellow, inactive titles show worn paint, and the screen crossfades in 0.45s. On phones the steps switch on tap, and the phone scrolls back into view.
 - **State transitions** (lanes, buttons, details): `cubic-bezier(0.16, 1, 0.3, 1)` over 0.2-0.35s.
-- **Reduced motion.** No drive, no tilt, no sweep (prices appear at once), no bank (the camera jumps), and no park stage (the strip sits in normal flow).
+- **Reduced motion.** No drive, no tilt, no sweep (prices appear at once), and no bank (the camera jumps). The tour crossfade is shortened to near-instant.
 
 ## Do's and Don'ts
 

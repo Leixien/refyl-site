@@ -26,6 +26,30 @@
         "value": "road",
         "createdAt": "2026-11-01T21:03:57.220Z",
         "reason": "agent: same alias, lowercased by the detector"
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-01T21:39:22.711Z",
+        "reason": "agent: stacked phone screens crossfade by design; inactive ones get aria-hidden"
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "en/index.html"
+        ],
+        "createdAt": "2026-11-01T21:39:22.734Z",
+        "reason": "agent: same crossfade stack"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(11, 15, 18)",
+        "createdAt": "2026-11-01T21:39:22.756Z",
+        "reason": "agent: iPhone bezel black, same as the App Store frames"
       }
     ]
   }

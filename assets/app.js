@@ -338,7 +338,7 @@
     const old = (i) => now - updMs[i] > STALE_DAYS * DAY;
     found.sort((a, b) => (old(a.i) - old(b.i)) || (price[a.i] - price[b.i]) || (a.km - b.km));
     near = { lat, lon, radius, items: found.slice(0, 5), sel: 0, label };
-    say(T.within(radius));
+    say(T.within(radius), false, true);
     renderResults();
     flyTo(fitAround(lat, lon, radius), animate);
   }
@@ -356,7 +356,8 @@
     ageEl.classList.toggle("stale-tag", age > STALE_DAYS);
     if (stats) {
       const d = p - stats.median, m = nf3.format(stats.median);
-      $("#best-delta").textContent = Math.abs(d) < 0.0005 ? T.at(m) : (d < 0 ? T.below(nf3.format(-d) + " €", m) : T.above(nf3.format(d) + " €", m));
+      const rel = Math.abs(d) < 0.0005 ? T.at(m) : (d < 0 ? T.below(nf3.format(-d) + "\u00a0€", m) : T.above(nf3.format(d) + "\u00a0€", m));
+      $("#best-delta").textContent = `${T.within(near.radius)}, ${rel}`;
     }
     $("#best-go").href = `https://maps.apple.com/?daddr=${s.lat},${s.lon}&dirflg=d`;
     bestEl.hidden = false;
@@ -434,7 +435,8 @@
     return s.toLowerCase().replace(/\b([\p{L}][\p{L}']*)/gu, (w, _x, off) => (off > 0 && SMALL.has(w)) ? w : w[0].toUpperCase() + w.slice(1))
       .replace(/\b(Ss|Sp|Sr|Sc|Km|Snc|Srl|Spa|Sas)\b/g, (m) => m.toUpperCase());
   }
-  function say(msg, err = false) { statusEl.textContent = msg; statusEl.classList.toggle("err", err); }
+  // quiet = screen readers only: on success the radius is read inside the result sentence, not as a label above it
+  function say(msg, err = false, quiet = false) { statusEl.textContent = msg; statusEl.classList.toggle("err", err); statusEl.classList.toggle("vh", quiet); }
 
   // ---------- wiring ----------
   document.querySelectorAll('input[name="fuel"]').forEach((r) => r.addEventListener("change", () => {
@@ -475,11 +477,7 @@
   canvas.title = T.tapHint;
 
   // ---------- scroll: the road tilts away like the view from the driver's seat ----------
-  const road = $(".road"), park = $(".park"), centreLine = $(".centre");
-  const parkImg = park && park.querySelector(".shots figure:first-child img");
-  const parkRest = park ? [...park.querySelectorAll(".shots figure:not(:first-child)")] : [];
-  const parkLead = park && park.querySelector(".sec-lead");
-  const parkMQ = matchMedia("(min-width: 901px) and (prefers-reduced-motion: no-preference)");
+  const road = $(".road"), centreLine = $(".centre");
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
   let ticking = false;
   function onScroll() {
@@ -487,46 +485,39 @@
     const vh = innerHeight;
     if (!reduce) {
       const r = road.getBoundingClientRect();
-      const pr = park ? park.getBoundingClientRect() : null;
       centreLine.style.setProperty("--drive", `${(scrollY * 1.6).toFixed(1)}px`);
       // desktop: tilt from the first pixel of scroll; phone: only once the map is leaving, so it never tilts while in use
       // with results open the user scrolls to read them: tilt only once the road is leaving, as on phones
       const p = innerWidth > 900 && !near ? clamp01(-r.top / (r.height * 0.85)) : clamp01((vh * 0.5 - r.bottom) / (vh * 0.5));
       road.style.transform = p > 0.002 ? `perspective(1400px) rotateX(${(p * 32).toFixed(2)}deg)` : "";
       road.style.opacity = p > 0.002 ? (1 - p * 0.35).toFixed(3) : "";
-      if (pr && pr.top < vh && pr.bottom > 0) parkStep(vh, pr);
-      else if (pr && pr.bottom <= 0) parkStep(vh, pr, true);
-    } else parkStep(vh);
-  }
-  // the app's map screenshot arrives full height and reverses into its parking bay
-  function parkStep(vh, r, parked = false) {
-    if (!park) return;
-    if (!parkMQ.matches || parked) {
-      parkImg.style.transform = ""; parkRest.forEach((f) => { f.style.opacity = ""; f.style.transform = ""; });
-      return;
     }
-    const p = clamp01(-r.top / ((r.height - vh) * 0.75)), e = 1 - (1 - p) ** 3;
-    const fig = parkImg.parentElement, fr = fig.getBoundingClientRect();
-    const w = parkImg.offsetWidth, h = parkImg.offsetHeight;
-    const cx = fr.left + parkImg.offsetLeft + w / 2, cy = fr.top + parkImg.offsetTop + h / 2;
-    // the big state sits in the free area right of the copy, centred on the sticky stage so it scrolls in with its section
-    const freeL = parkLead.getBoundingClientRect().right + 48, freeW = innerWidth - freeL - 32;
-    const S = Math.max(1, Math.min((vh * 0.94) / h, freeW / w));
-    const k = 1 - e;
-    const st = park.firstElementChild.getBoundingClientRect();
-    const tx = freeL + freeW / 2 - cx, ty = st.top + st.height / 2 - cy;
-    parkImg.style.transform = k > 0.001
-      ? `translate(${(tx * k).toFixed(1)}px, ${(ty * k).toFixed(1)}px) scale(${(1 + (S - 1) * k).toFixed(3)})`
-      : "";
-    parkRest.forEach((f, i) => {
-      const q = clamp01((p - 0.35 - i * 0.1) / 0.35);
-      f.style.opacity = q.toFixed(3);
-      f.style.transform = q < 1 ? `translateY(${((1 - q) * 70).toFixed(1)}px)` : "";
-    });
   }
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   addEventListener("resize", () => requestAnimationFrame(onScroll));
   onScroll();
+
+  // ---------- "In auto": one phone, five steps ----------
+  const steps = [...document.querySelectorAll(".step")], screens = [...document.querySelectorAll(".phone img")];
+  function showStep(k) {
+    steps.forEach((b, i) => (i === k ? b.setAttribute("aria-current", "step") : b.removeAttribute("aria-current")));
+    screens.forEach((im, i) => { im.classList.toggle("on", i === k); if (i === k) im.removeAttribute("aria-hidden"); else im.setAttribute("aria-hidden", "true"); });
+  }
+  const phone = $(".phone");
+  steps.forEach((b, k) => b.addEventListener("click", () => {
+    showStep(k);
+    // the caption only appears after a tap, so it never repeats the first step title sitting right below
+    $(".phone-cap").textContent = steps[k].querySelector("b").textContent;
+    // on phones the screen sits above the list: bring it back into view after a tap
+    if (innerWidth <= 900) phone.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+  }));
+  // desktop: the step crossing the middle of the screen drives the phone; phones switch on tap only
+  const io = new IntersectionObserver((entries) => {
+    if (innerWidth <= 900) return;
+    for (const e of entries) if (e.isIntersecting) showStep(steps.indexOf(e.target));
+  }, { rootMargin: "-45% 0px -45% 0px" });
+  steps.forEach((b) => io.observe(b));
+  showStep(0);
 
   const ro = new ResizeObserver(resize);
   ro.observe(canvas); ro.observe(railCanvas);
