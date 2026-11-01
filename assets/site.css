@@ -1,118 +1,242 @@
-/* Refyl site. One bold element: the roadside price totem in the hero. Everything else stays quiet. */
-:root {
-  --paper: #F4F5F0;      /* icon background */
-  --card: #FFFFFF;
-  --ink: #16211B;
-  --muted: #56615A;
-  --rule: #DCE0D8;
-  --green: #248A3D;      /* app "Best" colour, light */
-  --on-green: #FFFFFF;
-  --stale: #C93400;
-  --totem: #1E2A24;
-  --led: #30D158;
-  color-scheme: light dark;
+/* Refyl: the carriageway seen from above. Asphalt ground, road paint, lanes. */
+@font-face {
+  font-family: "Road";
+  src: url("fonts/big-shoulders-display-latin-900.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #101512;
-    --card: #19201C;
-    --ink: #EEF1EC;
-    --muted: #A3ADA6;
-    --rule: #2A332E;
-    --green: #30D158;
-    --on-green: #000000;
-    --stale: #FF9F0A;
-    --totem: #0B100D;
-  }
+@font-face {
+  font-family: "Road";
+  src: url("fonts/big-shoulders-display-latin-800.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+
+:root {
+  --asphalt: #4E5154;
+  --asphalt-deep: #313437;
+  --paint: #EEEDE6;
+  --paint-muted: #CFCEC6;
+  --yellow: #F2C230;
+  --on-yellow: #23221E;
+  --green: #30D158;
+  --on-green: #08130B;
+  --stale: #FFBE5C;
+  --line: 10px;
+  --gutter: clamp(16px, 4vw, 56px);
+  --road: "Road", "Arial Narrow", sans-serif;
+  --text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --wear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.045 .09' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -14 0 0 0 10.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--paint-muted) var(--asphalt-deep); }
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--asphalt) url("asphalt.webp");
+  color: var(--paint);
+  font: 17px/1.55 var(--text);
 }
-a { color: var(--green); text-underline-offset: 0.18em; }
-a:focus-visible, .button:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; border-radius: 6px; }
+::selection { background: var(--yellow); color: var(--on-yellow); }
+a { color: var(--paint); text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+a:hover { color: var(--yellow); }
+:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
 img { max-width: 100%; display: block; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-.wrap { width: min(1080px, 100% - 32px); margin-inline: auto; }
-
-/* Header */
-.top { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
-.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
-.brand img { width: 36px; height: 36px; border-radius: 9px; }
-.top nav { display: flex; gap: 18px; font-size: 15px; }
-.top nav a { color: var(--muted); text-decoration: none; }
-.top nav a:hover, .top nav a[aria-current] { color: var(--ink); }
-
-/* Hero */
-.hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; padding: 40px 0 72px; }
-.hero h1 { font-size: clamp(36px, 5.4vw, 60px); line-height: 1.04; letter-spacing: -0.03em; margin: 0 0 20px; font-weight: 800; }
-.hero p { font-size: 19px; color: var(--muted); max-width: 34em; margin: 0 0 28px; }
-.button { display: inline-flex; align-items: center; gap: 10px; background: var(--green); color: var(--on-green); text-decoration: none; font-weight: 600; padding: 14px 22px; border-radius: 14px; }
-.button svg { width: 20px; height: 20px; fill: currentColor; }
-.note { font-size: 14px; color: var(--muted); margin-top: 12px; }
-
-/* The totem: an Italian roadside price sign with dot-matrix LED digits */
-.totem { justify-self: center; width: min(340px, 100%); background: var(--totem); border-radius: 18px 18px 6px 6px; padding: 22px 20px 26px; color: #E8ECE9; border: 1px solid #2E3D35; box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.45); position: relative; }
-.totem::after { content: ""; position: absolute; left: 50%; bottom: -70px; width: 34px; height: 70px; transform: translateX(-50%); background: linear-gradient(90deg, #5d6a63, #8a968f 45%, #4d5852); border-radius: 0 0 4px 4px; }
-.totem-head { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; margin-bottom: 8px; border-bottom: 1px solid #34443B; font-weight: 700; letter-spacing: 0.02em; }
-.totem-head img { width: 28px; height: 28px; border-radius: 7px; }
-.row { display: flex; align-items: baseline; justify-content: space-between; padding: 10px 0; }
-.row + .row { border-top: 1px solid #2A3830; }
-.row span { font-size: 15px; color: #B9C3BC; }
-.row small { display: block; font-size: 12px; color: #7F8C84; }
-.led {
-  font: 800 46px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  letter-spacing: 0.02em;
-  color: var(--led);
-  -webkit-mask: radial-gradient(circle at center, #000 52%, transparent 58%) 0 0 / 4px 4px;
-          mask: radial-gradient(circle at center, #000 52%, transparent 58%) 0 0 / 4px 4px;
+/* Painted lettering: stretched tall like words on the road, slightly worn */
+.paint {
+  padding-top: 0.12em;
+  font-family: var(--road);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.82;
+  letter-spacing: 0.01em;
+  color: var(--paint);
+  -webkit-mask: var(--wear);
+          mask: var(--wear);
 }
-.led.dim { color: #F0A93B; }
+.stretch { display: inline-block; transform: scaleY(1.65); transform-origin: 0 0; margin-bottom: 0.62em; }
 
-/* Sections */
-section { padding: 56px 0; border-top: 1px solid var(--rule); }
-h2 { font-size: clamp(26px, 3.2vw, 34px); letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 16px; }
-.lead { color: var(--muted); max-width: 40em; margin: 0 0 28px; }
+/* Header: the kerb */
+.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px var(--gutter);
+  border-bottom: var(--line) solid var(--paint);
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand img { width: 34px; height: 34px; border-radius: 8px; }
+.brand span { font-family: var(--road); font-weight: 900; font-size: 30px; letter-spacing: 0.02em; text-transform: uppercase; }
+.top nav { display: flex; gap: clamp(12px, 2.4vw, 28px); font-size: 15px; font-weight: 600; }
+.top nav a { text-decoration: none; padding: 6px 0; border-bottom: 3px solid transparent; }
+.top nav a[aria-current] { border-bottom-color: var(--yellow); }
 
-.shots { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; }
-.shots img { width: 230px; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--rule); }
+/* The road: two lanes separated by a dashed centre line */
+.road {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--line) minmax(0, 1.12fr);
+  min-height: min(calc(100svh - 80px), 940px);
+}
+.centre { background: repeating-linear-gradient(var(--paint) 0 64px, transparent 64px 118px); -webkit-mask: var(--wear); mask: var(--wear); }
+.lane-l { padding: clamp(28px, 5vh, 64px) var(--gutter) 40px; display: flex; flex-direction: column; gap: 22px; }
+.lane-r { position: relative; background: linear-gradient(rgba(28, 30, 32, 0.4), rgba(28, 30, 32, 0.4)), url("asphalt.webp"); min-height: 520px; }
 
-.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-.two h3 { font-size: 20px; margin: 0 0 10px; }
-.two ul { margin: 0; padding-left: 1.1em; }
-.two li { margin: 6px 0; }
+.hero-word { font-size: clamp(64px, 8.6vw, 128px); margin: 0; padding-top: 0.2em; }
+.hero-word .stretch { margin-bottom: 1.1em; }
+.intro { font-size: clamp(17px, 1.5vw, 20px); max-width: 32em; margin: 0; color: var(--paint); }
+.intro small { display: block; margin-top: 6px; font-size: 14px; color: var(--paint-muted); }
 
-/* Prose pages (privacy, support) */
-.prose { padding: 32px 0 64px; }
+/* Fuel lanes: radio inputs drawn as painted lanes with arrows */
+.lanes { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+.lanes legend { font-size: 14px; color: var(--paint-muted); margin-bottom: 8px; padding: 0; }
+.lane { position: relative; display: block; cursor: pointer; }
+.lane + .lane { border-left: 4px dashed var(--paint-muted); }
+.lane input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.lane span {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 14px 6px 12px;
+  font-family: var(--road); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: 0.03em;
+  transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s;
+}
+.lane svg { width: 18px; height: 48px; fill: currentColor; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+.lane:hover svg { transform: translateY(-4px); }
+.lane input:checked + span { background: var(--yellow); color: var(--on-yellow); }
+.lane input:focus-visible + span { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+.ask { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font: 800 19px/1 var(--text);
+  padding: 15px 20px; border: 0; cursor: pointer; text-decoration: none;
+  background: var(--paint); color: var(--on-yellow);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s;
+}
+.btn:hover { color: var(--on-yellow); background: var(--yellow); transform: translateY(-2px); }
+.btn.green { background: var(--green); color: var(--on-green); }
+.btn.green:hover { color: var(--on-green); background: var(--green); }
+/* not a control: a works-zone word painted in yellow until the app is live */
+.soon { margin: 0; font-size: clamp(28px, 9vw, 64px); white-space: nowrap; color: var(--yellow); }
+.soon .stretch { margin-bottom: 0.55em; }
+.btn:active { transform: translateY(0); }
+.btn[aria-busy="true"] { opacity: 0.7; cursor: progress; }
+.btn svg { width: 20px; height: 20px; fill: currentColor; }
+.city { display: flex; flex: 1 1 220px; min-width: 0; min-height: 52px; border: 3px solid var(--paint); }
+.city input {
+  flex: 1; min-width: 0; border: 0; background: transparent; color: var(--paint);
+  font: 600 17px var(--text); padding: 0 14px; caret-color: var(--yellow);
+}
+.city input::placeholder { color: var(--paint-muted); }
+.city input::-webkit-calendar-picker-indicator { display: none !important; }
+.city input:focus { outline: none; }
+.city:focus-within { border-color: var(--yellow); }
+.city button { border: 0; background: var(--paint); color: var(--asphalt); font: 800 16px var(--text); padding: 0 16px; cursor: pointer; }
+.city button:hover { background: var(--yellow); }
+
+.status { min-height: 1.5em; margin: 0; font-size: 15px; color: var(--paint-muted); }
+.status.err { color: var(--stale); }
+
+/* Results: the cheapest nearby, painted like a road word, then the next ones */
+.best[hidden], .results[hidden] { display: none; }
+.best { display: grid; grid-template-columns: auto 1fr; gap: 4px 18px; align-items: end; }
+.best .price { grid-row: span 2; font-size: clamp(76px, 7vw, 108px); color: var(--green); margin: 0; }
+.best .price .stretch { margin-bottom: 0.5em; }
+.best .unit { font-size: clamp(18px, 0.32em, 36px); margin-left: 4px; }
+.best h2 { margin: 0; font-size: 21px; line-height: 1.2; }
+.best p { margin: 0; color: var(--paint-muted); font-size: 15px; }
+.delta { color: var(--paint); font-weight: 700; }
+.go { margin-top: 6px; grid-column: 1 / -1; justify-self: start; }
+
+.results { list-style: none; margin: 0; padding: 0; border-top: 4px solid var(--paint); }
+.results li { border-bottom: 2px dashed var(--paint-muted); }
+.results button {
+  width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left;
+  background: none; border: 0; color: var(--paint); padding: 10px 2px; cursor: pointer; font: inherit;
+}
+.results button:hover, .results button[aria-current="true"] { background: rgba(238, 237, 230, 0.07); }
+.results .n { font-weight: 650; font-size: 16px; }
+.results .m { grid-column: 1; font-size: 14px; color: var(--paint-muted); }
+.results .p { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-family: var(--road); font-weight: 900; font-size: 34px; font-variant-numeric: tabular-nums; }
+.stale-tag { color: var(--stale); }
+.results .old .p { color: var(--paint-muted); -webkit-mask: var(--wear); mask: var(--wear); }
+
+/* The price rail: every station on one line, cheapest at the left */
+.rail { margin-top: auto; }
+.rail canvas { width: 100%; height: 54px; display: block; }
+.rail p { margin: 6px 0 0; font-size: 14px; color: var(--paint-muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.rail b { color: var(--paint); font-variant-numeric: tabular-nums; }
+
+/* Map */
+#map { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: manipulation; cursor: crosshair; }
+.map-foot { position: absolute; left: 20px; right: 20px; bottom: 14px; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+.legend { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--paint-muted); pointer-events: none; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.loading { margin: 0; font-size: 13px; color: var(--paint-muted); }
+.loading[hidden] { display: none; }
+
+/* Sections below the fold: each one is a stretch of road between solid lines */
+.stretch-sec { border-top: var(--line) solid var(--paint); padding: clamp(48px, 8vw, 96px) var(--gutter); }
+.sec-word { font-size: clamp(54px, 7vw, 96px); margin: 0 0 8px; }
+.sec-lead { max-width: 38em; margin: 0 0 36px; font-size: 18px; }
+
+.shots { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 0; padding-bottom: 14px; scrollbar-width: thin; }
+.shots figure { margin: 0; flex: 0 0 max(220px, calc((100% - 4px) / 5)); max-width: 300px; padding: 22px 18px 0; scroll-snap-align: start; border-top: 4px solid var(--paint); border-left: 4px solid var(--paint); }
+.shots figure:last-child { border-right: 4px solid var(--paint); }
+.shots img { border-radius: 0; }
+
+.does { display: grid; grid-template-columns: 1fr var(--line) 1fr; }
+.does > div { padding: 0 clamp(20px, 4vw, 56px); }
+.does > div:first-child { padding-left: 0; }
+.does .solid { background: var(--paint); -webkit-mask: var(--wear); mask: var(--wear); padding: 0; }
+.does h3 { font-family: var(--road); font-weight: 900; text-transform: uppercase; font-size: 40px; letter-spacing: 0.02em; margin: 0 0 14px; }
+.does ul { list-style: none; margin: 0; padding: 0; }
+.does li { padding: 10px 0; border-bottom: 2px dashed rgba(238, 237, 230, 0.28); }
+.not li { text-decoration: line-through; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; }
+.not li span { text-decoration: none; display: inline-block; color: var(--paint-muted); margin-left: 6px; }
+
+.end { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px clamp(32px, 6vw, 80px); align-items: end; }
+.end p { margin: 0 0 16px; max-width: 34em; }
+.store-note { font-size: 14px; color: var(--paint-muted); margin-top: 10px; }
+
+/* Read pages: privacy and support */
+.prose { padding: clamp(36px, 6vw, 72px) var(--gutter) 80px; }
 .prose > * { max-width: 680px; }
-.prose h1 { font-size: clamp(32px, 4.4vw, 44px); letter-spacing: -0.025em; line-height: 1.1; margin: 0 0 12px; }
-.prose h2 { font-size: 22px; margin: 36px 0 8px; }
-.prose .updated { color: var(--muted); font-size: 15px; margin: 0 0 28px; }
-.prose code { font-size: 0.88em; overflow-wrap: anywhere; }
-.contact { background: var(--card); border: 1px solid var(--rule); border-radius: 16px; padding: 22px 24px; margin: 8px 0 8px; }
-.contact p { margin: 0 0 14px; }
-details { border-bottom: 1px solid var(--rule); padding: 14px 0; }
-details summary { cursor: pointer; font-weight: 600; }
-details p { margin: 10px 0 0; color: var(--muted); }
+.prose .sec-word { max-width: none; }
+.prose h2 { font-family: var(--road); font-weight: 900; text-transform: uppercase; font-size: 32px; letter-spacing: 0.02em; margin: 44px 0 6px; line-height: 1; }
+.prose .updated { color: var(--paint-muted); font-size: 15px; margin: 0 0 28px; }
+.prose code { font-size: 0.86em; overflow-wrap: anywhere; color: var(--paint-muted); }
+.contact { border: 4px solid var(--paint); padding: 22px 24px; margin: 8px 0 18px; }
+.contact p { margin: 0 0 16px; }
+details { border-bottom: 2px dashed rgba(238, 237, 230, 0.35); padding: 14px 0; }
+details summary { cursor: pointer; font-weight: 650; list-style: none; display: flex; gap: 12px; align-items: baseline; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: ""; flex: none; width: 10px; height: 10px; border-right: 3px solid var(--yellow); border-bottom: 3px solid var(--yellow); transform: rotate(-45deg); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+details[open] summary::before { transform: rotate(45deg); }
+details p { margin: 10px 0 0 22px; color: var(--paint-muted); }
 
-/* Footer */
-footer { border-top: 1px solid var(--rule); padding: 28px 0 40px; font-size: 14px; color: var(--muted); }
-footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; }
+footer { border-top: var(--line) solid var(--paint); padding: 28px var(--gutter) 40px; font-size: 14px; color: var(--paint-muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 28px; }
+footer p { margin: 0; max-width: 46em; }
 footer nav { display: flex; flex-wrap: wrap; gap: 18px; }
-footer a { color: var(--muted); }
+footer a { color: var(--paint-muted); }
 
-@media (max-width: 760px) {
-  .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 16px; padding-bottom: 96px; }
-  .two { grid-template-columns: 1fr; gap: 28px; }
-  .top nav { gap: 14px; }
-  .shots img { width: 200px; }
+@media (max-width: 900px) {
+  .road { grid-template-columns: 1fr; min-height: 0; }
+  .centre { height: var(--line); background: repeating-linear-gradient(90deg, var(--paint) 0 48px, transparent 48px 88px); }
+  .lane-r { min-height: 0; display: flex; flex-direction: column; }
+  #map { position: relative; inset: auto; height: 112vw; max-height: 620px; }
+  .map-foot { position: static; padding: 4px 20px 18px; }
+  .rail { margin-top: 8px; }
+  .does { grid-template-columns: 1fr; gap: 36px; }
+  .does .solid { height: var(--line); }
+  .does > div { padding: 0; }
+  .end { grid-template-columns: 1fr; }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .led { animation: flick 1.4s steps(2) 1; }
-  @keyframes flick { 0% { opacity: 0.2; } 100% { opacity: 1; } }
+@media (max-width: 480px) {
+  .lane span { font-size: 17px; padding: 12px 2px 10px; }
+  .lane svg { height: 38px; }
+  .top nav { font-size: 14px; }
+  .brand span { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }

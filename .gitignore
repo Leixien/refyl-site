@@ -1,0 +1,8 @@
+.DS_Store
+.impeccable/review/
+.impeccable/sketch/
+.impeccable/mocks/
+.impeccable/live/
+.impeccable/*.local.json
+.impeccable/hook.cache.json
+.playwright-mcp/

@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "assets/site.css"
+        ],
+        "createdAt": "2026-11-01T20:44:41.493Z",
+        "reason": "agent: the dashed centre line is a literal road marking, the chosen direction's core material (road surface markings world)"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "assets/site.css"
+        ],
+        "createdAt": "2026-11-01T20:49:17.646Z",
+        "reason": "agent: flagged rule is the 10px rotated chevron on details summary (two borders form an arrow), not a card accent"
+      }
+    ]
+  }
+}

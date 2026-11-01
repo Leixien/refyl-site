@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T21:01:28+00:00",
+  "title": "Design System: Refyl",
+  "extensions": {
+    "colorMeta": {
+      "asphalt": {
+        "role": "neutral",
+        "displayName": "Asphalt",
+        "canonical": "#4E5154",
+        "tonalRamp": [
+          "#252627",
+          "#3E4041",
+          "#57595C",
+          "#6F7377",
+          "#888C90",
+          "#ABADB0",
+          "#D0D1D2",
+          "#F2F2F2"
+        ]
+      },
+      "asphalt-deep": {
+        "role": "neutral",
+        "displayName": "Deep Asphalt",
+        "canonical": "#313437",
+        "tonalRamp": [
+          "#252628",
+          "#3D4042",
+          "#55595D",
+          "#6D7379",
+          "#868C92",
+          "#AAADB1",
+          "#CFD1D3",
+          "#F2F2F3"
+        ]
+      },
+      "paint": {
+        "role": "primary",
+        "displayName": "Thermoplastic White",
+        "canonical": "#EEEDE6",
+        "tonalRamp": [
+          "#2A2922",
+          "#484637",
+          "#67644B",
+          "#87825E",
+          "#A19C78",
+          "#BAB7A1",
+          "#D6D5CC",
+          "#F3F3F1"
+        ]
+      },
+      "paint-muted": {
+        "role": "neutral",
+        "displayName": "Worn Paint",
+        "canonical": "#CFCEC6",
+        "tonalRamp": [
+          "#282824",
+          "#44433C",
+          "#605E53",
+          "#7C7A6A",
+          "#959383",
+          "#B3B2A8",
+          "#D4D3CF",
+          "#F3F3F2"
+        ]
+      },
+      "works-yellow": {
+        "role": "secondary",
+        "displayName": "Works-Zone Yellow",
+        "canonical": "#F2C230",
+        "tonalRamp": [
+          "#3A3013",
+          "#675418",
+          "#9A7A19",
+          "#D2A314",
+          "#EBBC2D",
+          "#E6CA75",
+          "#EADEB8",
+          "#F7F5ED"
+        ]
+      },
+      "on-yellow": {
+        "role": "secondary",
+        "displayName": "Yellow Ink",
+        "canonical": "#23221E",
+        "tonalRamp": [
+          "#282725",
+          "#43423C",
+          "#5F5D54",
+          "#7B786A",
+          "#959184",
+          "#B2B0A8",
+          "#D3D2CF",
+          "#F3F3F2"
+        ]
+      },
+      "cheapest-green": {
+        "role": "tertiary",
+        "displayName": "Cheapest Green",
+        "canonical": "#30D158",
+        "tonalRamp": [
+          "#18341F",
+          "#235C31",
+          "#2B8842",
+          "#2EB750",
+          "#48D16A",
+          "#85D699",
+          "#BFE3C8",
+          "#EFF6F0"
+        ]
+      },
+      "on-green": {
+        "role": "tertiary",
+        "displayName": "Green Ink",
+        "canonical": "#08130B",
+        "tonalRamp": [
+          "#1D2F22",
+          "#2E5237",
+          "#3B774C",
+          "#479F5F",
+          "#60B878",
+          "#93C7A2",
+          "#C6DDCC",
+          "#F0F5F1"
+        ]
+      },
+      "stale-orange": {
+        "role": "tertiary",
+        "displayName": "Stale Orange",
+        "canonical": "#FFBE5C",
+        "tonalRamp": [
+          "#3C2B10",
+          "#6C4913",
+          "#A26910",
+          "#DF8A07",
+          "#F8A420",
+          "#EDBB6D",
+          "#EDD7B5",
+          "#F8F4EC"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Painted Display",
+        "purpose": "The single hero word; stretched 1.65x vertically, wear-masked."
+      },
+      "headline": {
+        "displayName": "Painted Headline",
+        "purpose": "One painted word per section; the best price in green."
+      },
+      "title": {
+        "displayName": "Road Title",
+        "purpose": "Sub-heads and read-page h2; not stretched."
+      },
+      "label": {
+        "displayName": "Lane Label",
+        "purpose": "Fuel-lane names; list prices use Road 900 34px tabular."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All reading copy, buttons at 800/19px."
+      },
+      "body-small": {
+        "displayName": "Small",
+        "purpose": "Status, legend, meta, footer; usually worn paint."
+      }
+    },
+    "shadows": [
+      {
+        "name": "canvas-letter-outline",
+        "value": "stroke rgba(49,52,55,.85), 6px round join (4px for small labels)",
+        "purpose": "Only depth device: outline behind lettering painted on the map canvas. No box-shadows exist."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All state transitions."
+      },
+      {
+        "name": "duration-press",
+        "value": "0.2s",
+        "purpose": "Button lift and fill."
+      },
+      {
+        "name": "duration-lane",
+        "value": "0.25s",
+        "purpose": "Lane fill, disclosure chevron."
+      },
+      {
+        "name": "duration-arrow",
+        "value": "0.35s",
+        "purpose": "Lane arrow nudge on hover."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "900px"
+      },
+      {
+        "name": "compact",
+        "value": "480px"
+      }
+    ],
+    "lines": [
+      {
+        "name": "edge",
+        "value": "10px solid paint"
+      },
+      {
+        "name": "centre",
+        "value": "10px dashed 64/54px vertical, 48/40px horizontal, wear-masked"
+      },
+      {
+        "name": "frame",
+        "value": "4px solid paint"
+      },
+      {
+        "name": "lane-divider",
+        "value": "4px dashed paint-muted"
+      },
+      {
+        "name": "field",
+        "value": "3px solid paint"
+      },
+      {
+        "name": "separator",
+        "value": "2px dashed paint-muted or paint at 28-35%"
+      }
+    ],
+    "wear": {
+      "value": "SVG feTurbulence fractalNoise baseFrequency .045 .09, 4 octaves, seed 7, as mask",
+      "purpose": "Worn paint on display words, centre line, solid divider, stale prices."
+    },
+    "ground": {
+      "value": "#4E5154 + assets/asphalt.webp (procedural, tools/make-asphalt.py, seed 42)",
+      "purpose": "Page ground; map lane adds rgba(28,30,32,.4) scrim."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button (green)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Act on the cheapest: near me, directions.",
+      "html": "<button class=\"ds-btn ds-btn-green\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M21.7 2.3a1 1 0 0 0-1.1-.2l-18 8a1 1 0 0 0 .1 1.9l7.6 2 2 7.6a1 1 0 0 0 1.9.1l8-18a1 1 0 0 0-.5-1.4z\"/></svg>Vicino a me</button>",
+      "css": ".ds-btn { display:inline-flex; align-items:center; gap:10px; font:800 19px/1 -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; padding:15px 20px; border:0; border-radius:0; cursor:pointer; transition:transform .2s cubic-bezier(0.16, 1, 0.3, 1), background-color .2s; } .ds-btn svg { width:20px; height:20px; fill:currentColor; } .ds-btn-green { background:#30D158; color:#08130B; } .ds-btn:hover { transform:translateY(-2px); } .ds-btn:active { transform:none; } .ds-btn:focus-visible { outline:3px solid #F2C230; outline-offset:3px; }"
+    },
+    {
+      "name": "Paint Button",
+      "kind": "button",
+      "refersTo": "button-paint",
+      "description": "Secondary action painted white; turns works-yellow on hover.",
+      "html": "<button class=\"ds-btn-paint\">Cerca</button>",
+      "css": ".ds-btn-paint { font:800 19px/1 -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; padding:15px 20px; border:0; border-radius:0; background:#EEEDE6; color:#23221E; cursor:pointer; transition:transform .2s cubic-bezier(0.16, 1, 0.3, 1), background-color .2s; } .ds-btn-paint:hover { background:#F2C230; transform:translateY(-2px); } .ds-btn-paint:focus-visible { outline:3px solid #F2C230; outline-offset:3px; }"
+    },
+    {
+      "name": "Fuel Lanes",
+      "kind": "chip",
+      "refersTo": "lane-selected",
+      "description": "Radio group drawn as painted lanes with arrows; checked lane is works-yellow.",
+      "html": "<div class=\"ds-lanes\"><label class=\"ds-lane\"><input type=\"radio\" name=\"f\" checked><span><svg viewBox=\"0 0 18 48\"><path d=\"M9 0 18 15h-6v33H6V15H0z\"/></svg>Benzina</span></label><label class=\"ds-lane\"><input type=\"radio\" name=\"f\"><span><svg viewBox=\"0 0 18 48\"><path d=\"M9 0 18 15h-6v33H6V15H0z\"/></svg>Gasolio</span></label><label class=\"ds-lane\"><input type=\"radio\" name=\"f\"><span><svg viewBox=\"0 0 18 48\"><path d=\"M9 0 18 15h-6v33H6V15H0z\"/></svg>GPL</span></label><label class=\"ds-lane\"><input type=\"radio\" name=\"f\"><span><svg viewBox=\"0 0 18 48\"><path d=\"M9 0 18 15h-6v33H6V15H0z\"/></svg>Metano</span></label></div>",
+      "css": ".ds-lanes { display:grid; grid-template-columns:repeat(4,1fr); background:#4E5154; color:#EEEDE6; } .ds-lane { position:relative; cursor:pointer; } .ds-lane + .ds-lane { border-left:4px dashed #CFCEC6; } .ds-lane input { position:absolute; inset:0; opacity:0; cursor:pointer; } .ds-lane span { display:flex; flex-direction:column; align-items:center; gap:8px; padding:14px 6px 12px; font:800 22px 'Big Shoulders Display','Arial Narrow',sans-serif; text-transform:uppercase; letter-spacing:.03em; transition:background-color .25s cubic-bezier(0.16, 1, 0.3, 1), color .25s; } .ds-lane svg { width:18px; height:48px; fill:currentColor; transition:transform .35s cubic-bezier(0.16, 1, 0.3, 1); } .ds-lane:hover svg { transform:translateY(-4px); } .ds-lane input:checked + span { background:#F2C230; color:#23221E; } .ds-lane input:focus-visible + span { outline:3px solid #F2C230; outline-offset:3px; }"
+    },
+    {
+      "name": "City Field",
+      "kind": "input",
+      "refersTo": "city-field",
+      "description": "Painted-frame search field with attached paint submit.",
+      "html": "<form class=\"ds-city\"><input placeholder=\"oppure scrivi un comune\"><button type=\"button\">Cerca</button></form>",
+      "css": ".ds-city { display:flex; min-height:52px; border:3px solid #EEEDE6; background:#4E5154; } .ds-city:focus-within { border-color:#F2C230; } .ds-city input { flex:1; min-width:0; border:0; background:transparent; color:#EEEDE6; font:600 17px -apple-system, Roboto, Arial, sans-serif; padding:0 14px; caret-color:#F2C230; outline:none; } .ds-city input::placeholder { color:#CFCEC6; } .ds-city button { border:0; background:#EEEDE6; color:#4E5154; font:800 16px -apple-system, Roboto, Arial, sans-serif; padding:0 16px; cursor:pointer; } .ds-city button:hover { background:#F2C230; }"
+    },
+    {
+      "name": "Header (kerb)",
+      "kind": "nav",
+      "description": "Brand left, links right, current page underlined yellow, closed by a 10px edge line.",
+      "html": "<header class=\"ds-top\"><a class=\"ds-brand\" href=\"#\">Refyl</a><nav><a href=\"#\" aria-current=\"page\">Supporto</a><a href=\"#\">Privacy</a><a href=\"#\">English</a></nav></header>",
+      "css": ".ds-top { display:flex; justify-content:space-between; align-items:center; padding:18px 24px; background:#4E5154; border-bottom:10px solid #EEEDE6; } .ds-brand { font:900 30px 'Big Shoulders Display','Arial Narrow',sans-serif; text-transform:uppercase; letter-spacing:.02em; color:#EEEDE6; text-decoration:none; } .ds-top nav { display:flex; gap:24px; font:600 15px -apple-system, Roboto, Arial, sans-serif; } .ds-top nav a { color:#EEEDE6; text-decoration:none; padding:6px 0; border-bottom:3px solid transparent; } .ds-top nav a:hover { color:#F2C230; } .ds-top nav a[aria-current] { border-bottom-color:#F2C230; } .ds-top a:focus-visible { outline:3px solid #F2C230; outline-offset:3px; }"
+    },
+    {
+      "name": "Results List",
+      "kind": "custom",
+      "description": "Ranked stations between dashed rules; price in road lettering; stale price worn.",
+      "html": "<ol class=\"ds-results\"><li><button aria-current=\"true\"><span class=\"n\">Q8 Via Roma</span><span class=\"m\">1,2 km · oggi</span><span class=\"p\">1,689</span></button></li><li class=\"old\"><button><span class=\"n\">IP Viale Europa</span><span class=\"m\">2,0 km · 9 giorni fa</span><span class=\"p\">1,702</span></button></li></ol>",
+      "css": ".ds-results { list-style:none; margin:0; padding:0; border-top:4px solid #EEEDE6; background:#4E5154; } .ds-results li { border-bottom:2px dashed #CFCEC6; } .ds-results button { width:100%; display:grid; grid-template-columns:1fr auto; gap:2px 12px; text-align:left; background:none; border:0; color:#EEEDE6; padding:10px 2px; cursor:pointer; font:17px/1.55 -apple-system, Roboto, Arial, sans-serif; } .ds-results button:hover, .ds-results button[aria-current='true'] { background:rgba(238,237,230,.07); } .ds-results .n { font-weight:650; font-size:16px; } .ds-results .m { grid-column:1; font-size:14px; color:#CFCEC6; } .ds-results .p { grid-row:1 / span 2; grid-column:2; align-self:center; font:900 34px 'Big Shoulders Display','Arial Narrow',sans-serif; font-variant-numeric:tabular-nums; } .ds-results .old .p { color:#CFCEC6; opacity:.8; }"
+    },
+    {
+      "name": "Painted Word",
+      "kind": "custom",
+      "description": "Section display word: Road 900, uppercase, stretched 1.65x vertically (wear mask omitted in snippet).",
+      "html": "<h2 class=\"ds-paint\"><span>Dati veri</span></h2>",
+      "css": ".ds-paint { margin:0; padding-top:.12em; font:900 72px/.82 'Big Shoulders Display','Arial Narrow',sans-serif; letter-spacing:.01em; text-transform:uppercase; color:#EEEDE6; background:#4E5154; } .ds-paint span { display:inline-block; transform:scaleY(1.65); transform-origin:0 0; margin-bottom:.62em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Carriageway From Above",
+    "overview": "The page is a stretch of Italian road seen from overhead. The ground is real asphalt (a procedural aggregate tile, `assets/asphalt.webp`, over a mid-grey fill), and everything placed on it is road marking: thermoplastic white paint for text and lines, works-zone yellow for whatever is selected, Refyl green only for the cheapest price. Structure comes from markings rather than boxes. Solid edge lines separate the kerb (header), each stretch of road (section) and the footer. A dashed centre line splits the two lanes of the first viewport. Dashed lane dividers and painted arrows turn into the controls.\n\nPainted words are the display type: a condensed, heavy face, stretched vertically to 1.65x and masked with a turbulence \"wear\" texture so the paint reads as worn. Body copy uses the platform's text face at a calm reading size, so content stays plain and legible. Stale data is drawn as faded paint, not with an alarm treatment.\n\nThe world is dark-only (`color-scheme: dark`), flat, square-cornered and uses no drop shadows.",
+    "keyCharacteristics": [
+      "Asphalt ground with aggregate grain; paint white is the dominant foreground.",
+      "Vertically stretched, worn, uppercase road lettering for display.",
+      "Solid edge lines and dashed centre/lane lines are the dividers.",
+      "Yellow means selected or \"you\"; green means cheapest; faded paint means stale.",
+      "Square ends everywhere; dots are the only round forms."
+    ],
+    "rules": [
+      {
+        "name": "The One Meaning Rule",
+        "body": "Yellow means selected or \"you\". Green means cheapest. Neither is used as decoration or for brand emphasis.",
+        "section": "colors"
+      },
+      {
+        "name": "The Worn Paint Rule",
+        "body": "A stale price fades: dimmer paint, the wear mask, or a lower dot alpha. It does not get a red alert treatment.",
+        "section": "colors"
+      },
+      {
+        "name": "The Painted Word Rule",
+        "body": "Road lettering is for short words only: a heading, a price, a lane name. It is uppercase, and stretched and worn when it is display size. Sentences are never set in it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Same Face On Canvas Rule",
+        "body": "Text painted on the map uses the Road face at 900, scaled 1.6x vertically, with a deep-asphalt outline stroke, so canvas lettering matches the DOM lettering.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paint Has No Height Rule",
+        "body": "Markings sit in the surface. Do not add drop shadows, glows or raised cards.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** separate regions with painted lines (10px solid edge, dashed centre, 4px or 2px dashed lane rules) instead of cards or background panels.",
+      "**Do** keep yellow for selection or position and green for cheapest, everywhere including canvas.",
+      "**Do** show staleness as worn or faded paint (wear mask, lower alpha).",
+      "**Do** paint display words in Road 900, uppercase, stretched 1.65x, with the wear mask.",
+      "**Do** keep every rectangle square-cornered and every surface flat.",
+      "**Do** use `cubic-bezier(0.16, 1, 0.3, 1)` for state transitions (0.2-0.35s) and honour reduced motion."
+    ],
+    "donts": [
+      "**Don't** add drop shadows, glows or raised cards.",
+      "**Don't** round button, field or frame corners.",
+      "**Don't** use green for anything that is not cheapest, or yellow as a generic accent.",
+      "**Don't** set sentences or paragraphs in the Road face.",
+      "**Don't** load third-party fonts, tiles or scripts. The face is self-hosted."
+    ]
+  }
+}

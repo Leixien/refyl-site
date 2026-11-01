@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Refyl: fuel prices near you in Italy</title>
-<meta name="description" content="Refyl shows the cheapest fuel station near you in Italy with official government prices. Free for iPhone, no ads, no account.">
+<title>Refyl: the cheapest fuel station near you in Italy</title>
+<meta name="description" content="Try Refyl here: pick a fuel and find the cheapest station near you in Italy with today's official government prices. Free iPhone app, no ads, no account.">
+<meta name="theme-color" content="#4E5154">
 <link rel="alternate" hreflang="it" href="../">
 <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<meta name="apple-itunes-app" content="app-id=6829368006">
+<link rel="preload" href="../assets/fonts/big-shoulders-display-latin-900.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-<header class="wrap top">
-  <a class="brand" href="./"><img src="../assets/icon.svg" alt="">Refyl</a>
+<header class="top">
+  <a class="brand" href="./"><img src="../assets/icon.svg" alt=""><span>Refyl</span></a>
   <nav aria-label="Pages">
     <a href="support/">Support</a>
     <a href="privacy/">Privacy</a>
@@ -22,76 +23,118 @@
 </header>
 
 <main>
-  <div class="wrap hero">
-    <div>
-      <h1>The cheapest fuel station near you, at a glance.</h1>
-      <p>Refyl shows official petrol, diesel, LPG and CNG prices across Italy. Open the app and the lowest price within a few kilometres is right at the top, one tap away from directions.</p>
-      <a class="button" href="https://apps.apple.com/app/id6829368006">Download on the App Store</a>
-      <p class="note">Free for iPhone. No ads, no account.</p>
-    </div>
-    <div class="totem" role="img" aria-label="Fuel station price sign: petrol self-service 1.786, diesel self-service 1.689, LPG 0.719 updated 9 days ago">
-      <div class="totem-head"><img src="../assets/icon.svg" alt="">Refyl</div>
-      <div class="row"><span>Petrol<small>self-service</small></span><b class="led">1,786</b></div>
-      <div class="row"><span>Diesel<small>self-service</small></span><b class="led">1,689</b></div>
-      <div class="row"><span>LPG<small>9 days ago</small></span><b class="led dim">0,719</b></div>
-    </div>
-  </div>
+  <section class="road" aria-labelledby="hero-title">
+    <div class="lane-l">
+      <h1 id="hero-title" class="paint hero-word"><span class="stretch">Cheapest<br>near you</span><span class="vh">: the cheapest fuel station near you</span></h1>
+      <p class="intro">The cheapest fuel station near you in Italy, from the official prices station operators report to the government every day. Try it here, then take it in the car with the app.
+        <small>Your location stays in your browser. Nobody receives it.</small></p>
 
-  <section>
-    <div class="wrap">
-      <h2>How it works</h2>
-      <p class="lead">A map with the price on every station, the cheapest in green. A list sorted by price or distance, and a page with every fuel a station sells. Works offline with the last data downloaded.</p>
-      <div class="shots" tabindex="0" aria-label="App screenshots">
-        <img src="../assets/shots/en/1-home.jpg" width="506" height="1100" loading="lazy" alt="Map with prices and the cheapest station highlighted">
-        <img src="../assets/shots/en/2-list.jpg" width="506" height="1100" loading="lazy" alt="Nearby stations sorted by price">
-        <img src="../assets/shots/en/3-detail.jpg" width="506" height="1100" loading="lazy" alt="Station page with every price">
-        <img src="../assets/shots/en/4-fuels.jpg" width="506" height="1100" loading="lazy" alt="Fuel picker: petrol, diesel, LPG, CNG and more">
-        <img src="../assets/shots/en/5-dark.jpg" width="506" height="1100" loading="lazy" alt="The app in dark theme">
+      <fieldset class="lanes">
+        <legend>Fuel</legend>
+        <label class="lane"><input type="radio" name="fuel" value="benzina" checked><span><svg viewBox="0 0 18 48" aria-hidden="true"><path d="M9 0 18 15h-6v33H6V15H0z"/></svg>Petrol</span></label>
+        <label class="lane"><input type="radio" name="fuel" value="gasolio"><span><svg viewBox="0 0 18 48" aria-hidden="true"><path d="M9 0 18 15h-6v33H6V15H0z"/></svg>Diesel</span></label>
+        <label class="lane"><input type="radio" name="fuel" value="gpl"><span><svg viewBox="0 0 18 48" aria-hidden="true"><path d="M9 0 18 15h-6v33H6V15H0z"/></svg>LPG</span></label>
+        <label class="lane"><input type="radio" name="fuel" value="metano"><span><svg viewBox="0 0 18 48" aria-hidden="true"><path d="M9 0 18 15h-6v33H6V15H0z"/></svg>CNG</span></label>
+      </fieldset>
+
+      <div class="ask">
+        <button class="btn green" id="near-me" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.7 2.3a1 1 0 0 0-1.1-.2l-18 8a1 1 0 0 0 .1 1.9l7.6 2 2 7.6a1 1 0 0 0 1.9.1l8-18a1 1 0 0 0-.5-1.4z"/></svg>Near me</button>
+        <form class="city" id="city" role="search">
+          <label class="vh" for="city-q">Town</label>
+          <input id="city-q" name="q" list="towns" placeholder="or type an Italian town" autocomplete="off" enterkeyhint="search">
+          <datalist id="towns"></datalist>
+          <button type="submit">Search</button>
+        </form>
       </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+
+      <div class="best" id="best" hidden>
+        <p class="paint price"><span class="stretch"><span id="best-price"></span><span class="unit">€/l</span></span></p>
+        <h2 id="best-name"></h2>
+        <div>
+          <p id="best-addr"></p>
+          <p id="best-age"></p>
+          <p class="delta" id="best-delta"></p>
+        </div>
+        <a class="btn green go" id="best-go" href="#" target="_blank" rel="noopener">Directions</a>
+      </div>
+      <ol class="results" id="results" aria-label="Cheapest nearby" hidden></ol>
+
+      <div class="rail">
+        <canvas id="rail" aria-hidden="true"></canvas>
+        <p><span>min <b id="rail-lo">–</b></span><span>national median <b id="rail-mid">–</b></span><span>max <b id="rail-hi">–</b></span></p>
+      </div>
+    </div>
+
+    <div class="centre" aria-hidden="true"></div>
+
+    <div class="lane-r">
+      <canvas id="map" role="img" aria-label="Map of Italy made of every fuel station"></canvas>
+      <div class="map-foot">
+        <p class="legend" aria-hidden="true"><span><i style="background:#30D158"></i>cheapest 10% in Italy</span><span><i style="background:rgba(238,237,230,.8)"></i>recent price</span><span><i style="background:rgba(238,237,230,.3)"></i>unchanged for over 7 days</span></p>
+        <p class="loading" id="loading" aria-live="polite"></p>
+      </div>
+      <noscript><p class="loading">The interactive map needs JavaScript.</p></noscript>
     </div>
   </section>
 
-  <section>
-    <div class="wrap two">
+  <section class="stretch-sec" aria-labelledby="app-title">
+    <h2 id="app-title" class="paint sec-word"><span class="stretch">In the car</span></h2>
+    <p class="sec-lead">The app does the same at a glance: open it and the lowest price within a few kilometres is at the top, with distance and how recent it is. Tap Directions and Apple Maps takes you there. It works offline with the last prices downloaded.</p>
+    <div class="shots" tabindex="0" aria-label="App screenshots">
+      <figure><img src="../assets/shots/en/1-home.jpg" width="506" height="1100" alt="Map with prices and the cheapest station highlighted"></figure>
+      <figure><img src="../assets/shots/en/2-list.jpg" width="506" height="1100" alt="Nearby stations sorted by price"></figure>
+      <figure><img src="../assets/shots/en/3-detail.jpg" width="506" height="1100" alt="Station page with every price"></figure>
+      <figure><img src="../assets/shots/en/4-fuels.jpg" width="506" height="1100" alt="Fuel picker: petrol, diesel, LPG, CNG and more"></figure>
+      <figure><img src="../assets/shots/en/5-dark.jpg" width="506" height="1100" alt="The app in dark theme"></figure>
+    </div>
+  </section>
+
+  <section class="stretch-sec" aria-label="What it does and doesn't do">
+    <div class="does">
       <div>
         <h3>What it does</h3>
         <ul>
-          <li>Petrol, diesel, LPG, CNG, LNG and HVO prices</li>
-          <li>Self-service or attended, sorted by price or distance</li>
-          <li>Warns you when a price is old, so there are no surprises at the pump</li>
+          <li>Petrol, diesel, LPG, CNG, LNG and HVO across Italy</li>
+          <li>Self-service or attended, by price or distance</li>
+          <li>Warns you when a price is old</li>
           <li>Directions with Apple Maps</li>
           <li>Light and dark theme, large text, VoiceOver</li>
         </ul>
       </div>
-      <div>
+      <div class="solid" aria-hidden="true"></div>
+      <div class="not">
         <h3>What it doesn't do</h3>
         <ul>
-          <li>No ads</li>
-          <li>No account</li>
-          <li>No data collected: your location stays on the phone</li>
-          <li>No subscription</li>
+          <li>Ads</li>
+          <li>Accounts</li>
+          <li>Data collection <span>your location stays on the phone</span></li>
+          <li>Subscriptions</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="wrap">
-      <h2>Official prices, open code</h2>
-      <p class="lead">Prices are the ones station operators must report to the Italian Ministry of Enterprises and Made in Italy, updated every day. The app's code is public on <a href="https://github.com/Leixien/FuelFinder_IOS">GitHub</a>.</p>
+  <section class="stretch-sec end" aria-labelledby="end-title">
+    <div>
+      <h2 id="end-title" class="paint sec-word"><span class="stretch">Real data</span></h2>
+      <p>Prices are the ones station operators must report to the Italian Ministry of Enterprises and Made in Italy, updated every day. They are the same ones you just saw on the map. The app's code is public on <a href="https://github.com/Leixien/FuelFinder_IOS">GitHub</a>.</p>
+    </div>
+    <div>
+      <p class="paint soon"><span class="stretch">Soon on App Store</span></p>
+      <p class="store-note">Free for iPhone. No ads, no account.</p>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="wrap">
-    <p>© 2026 Giuseppe Scappaticci. Price data: MIMIT – Osservaprezzi Carburanti (IODL 2.0 licence).</p>
-    <nav aria-label="Links">
-      <a href="support/">Support</a>
-      <a href="privacy/">Privacy</a>
-      <a href="mailto:contactus@binarybuilders.dev">contactus@binarybuilders.dev</a>
-    </nav>
-  </div>
+  <p>© 2026 Giuseppe Scappaticci. Price data: MIMIT, Osservaprezzi Carburanti (IODL 2.0 licence).</p>
+  <nav aria-label="Links">
+    <a href="support/">Support</a>
+    <a href="privacy/">Privacy</a>
+    <a href="mailto:contactus@binarybuilders.dev">contactus@binarybuilders.dev</a>
+  </nav>
 </footer>
+<script src="../assets/app.js"></script>
 </body>
 </html>
