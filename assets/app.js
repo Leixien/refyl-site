@@ -7,6 +7,7 @@
     loadingDots: "Drawing Italy…",
     loadingPrices: "Loading today's prices…",
     loaded: (n, d) => `${n} stations, official MIMIT prices of ${d}`,
+    counting: (n, t, d) => `Painting the prices of ${d}: ${n} / ${t}`,
     failed: "Couldn't load prices. Check the connection and reload the page.",
     locating: "Finding your position…",
     denied: "Location blocked. Type a town instead, or tap the map.",
@@ -26,6 +27,7 @@
     loadingDots: "Disegno l'Italia…",
     loadingPrices: "Carico i prezzi di oggi…",
     loaded: (n, d) => `${n} distributori, prezzi ufficiali MIMIT del ${d}`,
+    counting: (n, t, d) => `Dipingo i prezzi del ${d}: ${n} / ${t}`,
     failed: "Non riesco a caricare i prezzi. Controlla la connessione e ricarica la pagina.",
     locating: "Cerco la tua posizione…",
     denied: "Posizione bloccata. Scrivi un comune, oppure tocca la mappa.",
@@ -69,19 +71,22 @@
   let fuel = "benzina";
   let near = null;                   // { lat, lon, radius, items: [{i, km}], sel }
   let W = 0, H = 0, dpr = 1;
-  const view = { cx: 0, cy: 0, s: 1 };
+  const view = { cx: 0, cy: 0, s: 1, sy: 0 };  // sy: screen y of the view centre
   let anim = null;
 
   const project = (lon, lat) => [(lon - LON0) * KX, LAT1 - lat];
 
   function fitItaly() {
     const w = (LON1 - LON0) * KX, h = LAT1 - LAT0;
-    return { cx: w / 2 + 0.25, cy: h / 2 - 0.15, s: Math.min(W / w, H / h) * 0.98 };
+    return { cx: w / 2 + 0.25, cy: h / 2 - 0.15, s: Math.min(W / w, H / h) * 0.98, sy: H / 2 };
   }
   function fitAround(lat, lon, km) {
     const [x, y] = project(lon, lat);
     const deg = (km * 2.3) / 111;
-    return { cx: x, cy: y, s: Math.min(W, H) / deg };
+    // the canvas grows with the results list: aim at the part of it that is on screen
+    const top = canvas.getBoundingClientRect().top;
+    const visH = Math.max(320, Math.min(H, innerHeight - Math.max(0, top)));
+    return { cx: x, cy: y, s: Math.min(W, visH) / deg, sy: Math.min(H / 2, Math.max(0, -top) + visH / 2) };
   }
 
   // ---------- canvas ----------
@@ -98,7 +103,7 @@
   }
 
   function toScreen(i) {
-    return [(px[i] - view.cx) * view.s + W / 2, (py[i] - view.cy) * view.s + H / 2];
+    return [(px[i] - view.cx) * view.s + W / 2, (py[i] - view.cy) * view.s + view.sy];
   }
 
   function draw() {
@@ -107,15 +112,16 @@
     ctx.clearRect(0, 0, W, H);
     const r = Math.max(1.1, Math.min(5, view.s * 0.012));
     const now = Date.now();
-    // four paint buckets, drawn in one pass each
-    const buckets = [[], [], [], []]; // 0 none, 1 stale, 2 fresh, 3 cheapest decile
+    // paint buckets, drawn in one pass each
+    const buckets = [[], [], [], [], []]; // 0 none, 1 stale, 2 fresh, 3 cheapest decile, 4 not yet painted
     for (let i = 0; i < N; i++) {
       const x = (px[i] - view.cx) * view.s + W / 2;
       if (x < -6 || x > W + 6) continue;
-      const y = (py[i] - view.cy) * view.s + H / 2;
+      const y = (py[i] - view.cy) * view.s + view.sy;
       if (y < -6 || y > H + 6) continue;
       let b = 2;
-      if (price) {
+      if (reveal && py[i] > reveal.y) b = 4;
+      else if (price) {
         const p = price[i];
         if (Number.isNaN(p)) b = 0;
         else if (now - updMs[i] > STALE_DAYS * DAY) b = 1;
@@ -123,14 +129,21 @@
       }
       buckets[b].push(x, y);
     }
-    const styles = [`rgba(${PAINT},.13)`, `rgba(${PAINT},.3)`, `rgba(${PAINT},${price ? 0.78 : 0.55})`, GREEN];
-    for (let b = 0; b < 4; b++) {
+    const styles = [`rgba(${PAINT},.13)`, `rgba(${PAINT},.3)`, `rgba(${PAINT},${price ? 0.78 : 0.55})`, GREEN, `rgba(${PAINT},.55)`];
+    for (let b = 0; b < 5; b++) {
       ctx.fillStyle = styles[b];
       const a = buckets[b];
       for (let k = 0; k < a.length; k += 2) ctx.fillRect(a[k] - r / 2, a[k + 1] - r / 2, r, r);
     }
+    if (reveal) {
+      // the line-painting machine: a fresh stripe sweeping north to south
+      const sy = (reveal.y - view.cy) * view.s + view.sy;
+      ctx.fillStyle = `rgb(${PAINT})`; ctx.fillRect(0, sy - 1.5, W, 3);
+      ctx.fillStyle = YELLOW; ctx.fillRect(W - 46, sy - 9, 34, 18);
+      if (reveal.label) paintText(reveal.label, W - 56, sy - 12, 30, YELLOW, "right");
+    }
     if (near) drawNear();
-    else if (stats && stations) drawRestBest();
+    else if (stats && stations && !reveal) drawRestBest();
   }
 
   // road lettering on the canvas: same face, stretched tall like the painted words
@@ -162,7 +175,7 @@
   }
 
   function drawNear() {
-    const [ux, uy] = [(project(near.lon, near.lat)[0] - view.cx) * view.s + W / 2, (project(near.lon, near.lat)[1] - view.cy) * view.s + H / 2];
+    const [ux, uy] = [(project(near.lon, near.lat)[0] - view.cx) * view.s + W / 2, (project(near.lon, near.lat)[1] - view.cy) * view.s + view.sy];
     // search radius, painted as a dashed ring
     const rpx = (near.radius / 111) * view.s;
     ctx.save();
@@ -182,7 +195,8 @@
       ctx.beginPath(); ctx.arc(x, y, sel ? 9 : 6, 0, Math.PI * 2); ctx.fill();
       paintText(nf3.format(price[i]), x, y - (sel ? 16 : 12), sel ? 34 : 22, sel ? GREEN : `rgb(${PAINT})`);
     }
-    if (near.label) paintText(near.label.toUpperCase(), ux, uy + 64, 40, `rgba(${PAINT},.9)`);
+    // the town is painted where the ring meets the bottom, clear of the prices clustered at the centre
+    if (near.label) paintText(near.label.toUpperCase(), ux, Math.min(uy + rpx * 0.82, view.sy * 2 - 24, H - 24), 40, `rgba(${PAINT},.9)`);
   }
 
   function drawRail() {
@@ -233,14 +247,40 @@
       N = stations.length; px = new Float32Array(N); py = new Float32Array(N);
       stations.forEach((s, i) => { const [x, y] = project(s.lon, s.lat); px[i] = x; py[i] = y; });
       const ref = d.prices_reference_date ? df.format(new Date(d.prices_reference_date + "T12:00:00")) : "";
-      loadingEl.textContent = T.loaded(new Intl.NumberFormat(T.locale).format(N), ref);
       buildCities();
       setFuel(fuel);
+      // searches await this promise, so the flight always starts after the paint machine has finished
+      return startReveal(ref);
     }).catch(() => {
       loadingEl.textContent = T.failed; dataPromise = null;
       throw new Error("prices");
     });
     return dataPromise;
+  }
+
+  // prices arrive: repaint Italy from north to south, counting the stations as the stripe passes
+  let reveal = null;
+  function startReveal(ref) {
+    const nf = new Intl.NumberFormat(T.locale), total = nf.format(N);
+    if (reduce || !W) { loadingEl.textContent = T.loaded(total, ref); draw(); return Promise.resolve(); }
+    const sorted = Float32Array.from(py).sort();
+    const top = sorted[0], bottom = sorted[N - 1], t0 = performance.now(), dur = 1900;
+    reveal = { y: top, label: "" };
+    loadingEl.setAttribute("aria-busy", "true"); // one announcement at the end, not one per frame
+    let done;
+    const finished = new Promise((r) => { done = r; });
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2;
+      reveal.y = top + (bottom - top) * e;
+      let lo = 0, hi = N;
+      while (lo < hi) { const m = (lo + hi) >> 1; if (sorted[m] <= reveal.y) lo = m + 1; else hi = m; }
+      reveal.label = nf.format(lo);
+      loadingEl.textContent = T.counting(reveal.label, total, ref);
+      if (k < 1) { draw(); requestAnimationFrame(tick); }
+      else { reveal = null; loadingEl.removeAttribute("aria-busy"); loadingEl.textContent = T.loaded(total, ref); draw(); done(); }
+    };
+    requestAnimationFrame(tick);
+    return finished;
   }
 
   function setFuel(f) {
@@ -352,7 +392,11 @@
       const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(2, -10 * k);
       view.cx = from.cx + (target.cx - from.cx) * e;
       view.cy = from.cy + (target.cy - from.cy) * e;
+      view.sy = from.sy + (target.sy - from.sy) * e;
       view.s = Math.exp(ls0 + (ls1 - ls0) * e);
+      // the camera banks down over the map mid-flight and levels out to land
+      const tilt = 40 * Math.sin(Math.PI * Math.min(1, k * 1.15));
+      canvas.style.transform = tilt > 0.2 ? `perspective(1100px) rotateX(${tilt.toFixed(2)}deg) scale(${(1 + tilt / 140).toFixed(3)})` : "";
       draw();
       anim = k < 1 ? requestAnimationFrame(step) : null;
     };
@@ -422,12 +466,67 @@
 
   canvas.addEventListener("click", async (e) => {
     const r = canvas.getBoundingClientRect();
-    const x = (e.clientX - r.left - W / 2) / view.s + view.cx, y = (e.clientY - r.top - H / 2) / view.s + view.cy;
+    // offsetX/Y are resolved through the 3D tilt, unlike the projected bounding box
+    const x = (e.offsetX - W / 2) / view.s + view.cx, y = (e.offsetY - view.sy) / view.s + view.cy;
     const lon = x / KX + LON0, lat = LAT1 - y;
     try { await loadPrices(); } catch { say(T.failed, true); return; }
     search(lat, lon);
   });
   canvas.title = T.tapHint;
+
+  // ---------- scroll: the road tilts away like the view from the driver's seat ----------
+  const road = $(".road"), park = $(".park"), centreLine = $(".centre");
+  const parkImg = park && park.querySelector(".shots figure:first-child img");
+  const parkRest = park ? [...park.querySelectorAll(".shots figure:not(:first-child)")] : [];
+  const parkLead = park && park.querySelector(".sec-lead");
+  const parkMQ = matchMedia("(min-width: 901px) and (prefers-reduced-motion: no-preference)");
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  let ticking = false;
+  function onScroll() {
+    ticking = false;
+    const vh = innerHeight;
+    if (!reduce) {
+      const r = road.getBoundingClientRect();
+      const pr = park ? park.getBoundingClientRect() : null;
+      centreLine.style.setProperty("--drive", `${(scrollY * 1.6).toFixed(1)}px`);
+      // desktop: tilt from the first pixel of scroll; phone: only once the map is leaving, so it never tilts while in use
+      // with results open the user scrolls to read them: tilt only once the road is leaving, as on phones
+      const p = innerWidth > 900 && !near ? clamp01(-r.top / (r.height * 0.85)) : clamp01((vh * 0.5 - r.bottom) / (vh * 0.5));
+      road.style.transform = p > 0.002 ? `perspective(1400px) rotateX(${(p * 32).toFixed(2)}deg)` : "";
+      road.style.opacity = p > 0.002 ? (1 - p * 0.35).toFixed(3) : "";
+      if (pr && pr.top < vh && pr.bottom > 0) parkStep(vh, pr);
+      else if (pr && pr.bottom <= 0) parkStep(vh, pr, true);
+    } else parkStep(vh);
+  }
+  // the app's map screenshot arrives full height and reverses into its parking bay
+  function parkStep(vh, r, parked = false) {
+    if (!park) return;
+    if (!parkMQ.matches || parked) {
+      parkImg.style.transform = ""; parkRest.forEach((f) => { f.style.opacity = ""; f.style.transform = ""; });
+      return;
+    }
+    const p = clamp01(-r.top / ((r.height - vh) * 0.75)), e = 1 - (1 - p) ** 3;
+    const fig = parkImg.parentElement, fr = fig.getBoundingClientRect();
+    const w = parkImg.offsetWidth, h = parkImg.offsetHeight;
+    const cx = fr.left + parkImg.offsetLeft + w / 2, cy = fr.top + parkImg.offsetTop + h / 2;
+    // the big state sits in the free area right of the copy, centred on the sticky stage so it scrolls in with its section
+    const freeL = parkLead.getBoundingClientRect().right + 48, freeW = innerWidth - freeL - 32;
+    const S = Math.max(1, Math.min((vh * 0.94) / h, freeW / w));
+    const k = 1 - e;
+    const st = park.firstElementChild.getBoundingClientRect();
+    const tx = freeL + freeW / 2 - cx, ty = st.top + st.height / 2 - cy;
+    parkImg.style.transform = k > 0.001
+      ? `translate(${(tx * k).toFixed(1)}px, ${(ty * k).toFixed(1)}px) scale(${(1 + (S - 1) * k).toFixed(3)})`
+      : "";
+    parkRest.forEach((f, i) => {
+      const q = clamp01((p - 0.35 - i * 0.1) / 0.35);
+      f.style.opacity = q.toFixed(3);
+      f.style.transform = q < 1 ? `translateY(${((1 - q) * 70).toFixed(1)}px)` : "";
+    });
+  }
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  addEventListener("resize", () => requestAnimationFrame(onScroll));
+  onScroll();
 
   const ro = new ResizeObserver(resize);
   ro.observe(canvas); ro.observe(railCanvas);

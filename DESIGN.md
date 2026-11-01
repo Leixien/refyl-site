@@ -191,6 +191,20 @@ The header acts as the kerb: brand mark (34px icon plus Road 30px wordmark) on t
 ### Read Pages
 Prose is capped at 680px under a painted section word. h2 is the Road title at 32px. The contact block is a 4px solid paint frame. FAQ disclosures are separated by dashed rules, with a yellow chevron that rotates from -45deg to 45deg when open.
 
+## Motion
+
+Motion on the home page comes from driving, and each behaviour has one job. They run one after another, never two at once on the same surface.
+
+- **The drive.** The dashes of the centre line slide with scroll at 1.6x the scroll speed, set as `--drive` on `.centre` only.
+- **The driver's view.** The road section tilts away with `perspective(1400px) rotateX(up to 32deg)`, pivoting on its bottom edge, and fades to 65% opacity, so the painted word reads as it does from the driver's seat.
+  - Desktop without a search: the tilt grows from the first pixel of scroll.
+  - On phones, and on desktop once a search has results: the tilt starts only when the road's bottom edge is above half the viewport. It never tilts while the map or results are in use.
+- **The paint machine.** When the prices arrive, a paint-white stripe with a works-yellow block sweeps Italy north to south in 1.9s (ease-in-out). It repaints each dot from the pre-price paint to its price colour, and paints the running count in yellow Road beside the block. The caption line under the map is `aria-busy` during the sweep and announces once at the end. Searches wait for the machine to finish.
+- **The flight.** A search animates the map camera over 1.1s with exponential ease-out (zoom in log space). The canvas banks up to 40deg mid-flight (`rotateX`, sine envelope) and lands flat. It aims at the part of the canvas that is on screen. On desktop the map is sticky beside the results.
+- **The parking.** In the "In auto" section the app's map screenshot starts at full stage height in the free area right of the copy. It reverses into its bay while the other four bays slide up in turn, all driven by scroll on a 240vh sticky stage. Desktop only (min-width 901px).
+- **State transitions** (lanes, buttons, details): `cubic-bezier(0.16, 1, 0.3, 1)` over 0.2-0.35s.
+- **Reduced motion.** No drive, no tilt, no sweep (prices appear at once), no bank (the camera jumps), and no park stage (the strip sits in normal flow).
+
 ## Do's and Don'ts
 
 ### Do:
