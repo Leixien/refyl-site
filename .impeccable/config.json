@@ -20,6 +20,12 @@
         ],
         "createdAt": "2026-11-01T20:49:17.646Z",
         "reason": "agent: flagged rule is the 10px rotated chevron on details summary (two borders form an arrow), not a card accent"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "road",
+        "createdAt": "2026-11-01T21:03:57.220Z",
+        "reason": "agent: same alias, lowercased by the detector"
       }
     ]
   }
