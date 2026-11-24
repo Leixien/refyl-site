@@ -124,6 +124,8 @@ a, button, label, input { -webkit-tap-highlight-color: transparent; touch-action
 /* not a control: a works-zone word painted in yellow until the app is live */
 .soon { margin: 0; font-size: clamp(28px, 9vw, 64px); white-space: nowrap; color: var(--yellow); }
 .soon .stretch { margin-bottom: 0.55em; }
+a.soon { display: inline-block; text-decoration: none; }
+a.soon:hover, a.soon:focus-visible { color: var(--paint); }
 .btn:active { transform: translateY(0); }
 .btn[aria-busy="true"] { opacity: 0.7; cursor: progress; }
 .btn svg { width: 20px; height: 20px; fill: currentColor; }
